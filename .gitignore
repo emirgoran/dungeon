@@ -26,3 +26,9 @@ target/
 saves/
 logs/
 
+.settings/
+.checkstyle
+.classpath
+.project
+codemr/
+logfile.log
