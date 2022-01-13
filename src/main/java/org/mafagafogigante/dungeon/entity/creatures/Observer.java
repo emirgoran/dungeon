@@ -1,7 +1,20 @@
 package org.mafagafogigante.dungeon.entity.creatures;
 
+import java.awt.Color;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.jetbrains.annotations.NotNull;
 import org.mafagafogigante.dungeon.entity.Luminosity;
 import org.mafagafogigante.dungeon.entity.items.Item;
+import org.mafagafogigante.dungeon.game.ColoredString;
 import org.mafagafogigante.dungeon.game.Direction;
 import org.mafagafogigante.dungeon.game.DungeonString;
 import org.mafagafogigante.dungeon.game.Game;
@@ -17,19 +30,6 @@ import org.mafagafogigante.dungeon.world.LuminosityVisibilityCriterion;
 import org.mafagafogigante.dungeon.world.VisibilityCriteria;
 import org.mafagafogigante.dungeon.world.WeatherCondition;
 import org.mafagafogigante.dungeon.world.WeatherConditionVisibilityCriterion;
-
-import org.jetbrains.annotations.NotNull;
-
-import java.awt.Color;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * An observer is used to observe from a Creature's viewpoint.
