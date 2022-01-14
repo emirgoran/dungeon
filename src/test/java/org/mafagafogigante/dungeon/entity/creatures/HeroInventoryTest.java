@@ -46,7 +46,7 @@ public class HeroInventoryTest {
 	private World world = mock(World.class);
 
 	@Test
-	public void pickUpItem() {
+	public void addItem() {
 		when(item.getQualifiedName()).thenReturn("TestItem");
 		when(item.getWeight()).thenReturn(Weight.newInstance(1.0));
 		hero.addItem(item);
@@ -54,7 +54,7 @@ public class HeroInventoryTest {
 	}
 
 	@Test
-	public void pickItem() {
+	public void pickUpItem() {
 		LocationInventory locInventory = new LocationInventory();
 		when(location.getInventory()).thenReturn(locInventory);
 		when(location.getItemList()).thenReturn(locInventory.getItems());
