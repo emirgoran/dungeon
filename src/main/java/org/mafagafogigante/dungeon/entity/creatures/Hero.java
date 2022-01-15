@@ -428,35 +428,30 @@ public class Hero extends Creature {
 	public void eatItem(String[] arguments) {
 		Item selectedItem = inventoryHandler.selectInventoryItem(arguments);
 		if (selectedItem != null) {
-			if (selectedItem.hasTag(Item.Tag.FOOD)) {
-				Engine.rollDateAndRefresh(SECONDS_TO_EAT_AN_ITEM);
-				if (getInventory().hasItem(selectedItem)) {
-					FoodComponent food = selectedItem.getFoodComponent();
-					double remainingBites = selectedItem.getIntegrity().getCurrent()
-							/ (double) food.getIntegrityDecrementOnEat();
-					int healthChange;
-					if (remainingBites >= 1.0) {
-						healthChange = food.getNutrition();
-					} else {
-						// The absolute value of the healthChange will never be equal to nutrition, only
-						// smaller.
-						healthChange = (int) (food.getNutrition() * remainingBites);
-					}
-					selectedItem.decrementIntegrityByEat();
-					if (selectedItem.isBroken() && !selectedItem.hasTag(Item.Tag.REPAIRABLE)) {
-						Writer.write("You ate " + selectedItem.getName() + ".");
-					} else {
-						Writer.write("You ate a bit of " + selectedItem.getName() + ".");
-					}
-					addHealth(healthChange);
-					if (healthChange > 0) {
-						WELL_FED_EFFECT.affect(this);
-					}
+			if (!selectedItem.hasTag(Item.Tag.FOOD)) {
+				Writer.write("You can only eat food.");
+				return;
+			}
+			Engine.rollDateAndRefresh(SECONDS_TO_EAT_AN_ITEM);
+			if (getInventory().hasItem(selectedItem)) {
+				FoodComponent food = selectedItem.getFoodComponent();
+				double remainingBites = selectedItem.getIntegrity().getCurrent()
+						/ (double) food.getIntegrityDecrementOnEat();
+				// The absolute value of the healthChange will never be equal to nutrition, only
+				// smaller.
+				int healthChange = (int) (food.getNutrition() * Math.min(1, remainingBites));
+				selectedItem.decrementIntegrityByEat();
+				if (selectedItem.isBroken() && !selectedItem.hasTag(Item.Tag.REPAIRABLE)) {
+					Writer.write("You ate " + selectedItem.getName() + ".");
 				} else {
-					HeroUtils.writeNoLongerInInventoryMessage(selectedItem);
+					Writer.write("You ate a bit of " + selectedItem.getName() + ".");
+				}
+				addHealth(healthChange);
+				if (healthChange > 0) {
+					WELL_FED_EFFECT.affect(this);
 				}
 			} else {
-				Writer.write("You can only eat food.");
+				HeroUtils.writeNoLongerInInventoryMessage(selectedItem);
 			}
 		}
 	}
@@ -793,6 +788,45 @@ public class Hero extends Creature {
 		walker.parseHeroWalk(arguments);
 	}
 
+	private Item getEquippedClock() {
+		Item clock = null;
+		if (!(hasWeapon() && getWeapon().hasTag(Item.Tag.CLOCK)))
+			return null;
+
+		if (!getWeapon().isBroken()) {
+			return getWeapon();
+		}
+
+		for (Item item : getInventory().getItems(Item.Tag.CLOCK)) {
+			if (!item.isBroken()) {
+				clock = item;
+				break;
+			}
+		}
+		if (clock == null) {
+			clock = getWeapon(); // The Hero does not have a working clock in his inventory: use the equipped
+									// one.
+		}
+		return clock;
+	}
+
+	public Item getClockFromInventory() {
+		Item clock = null;
+		Item brokenClock = null;
+		for (Item item : getInventory().getItems(Item.Tag.CLOCK)) {
+			if (item.isBroken() && brokenClock == null) {
+				brokenClock = item;
+			} else {
+				clock = item;
+				break;
+			}
+		}
+		if (brokenClock != null) {
+			clock = brokenClock;
+		}
+		return clock;
+	}
+
 	/**
 	 * Gets the easiest-to-access unbroken clock of the Hero. If the Hero has no
 	 * unbroken clock, the easiest-to-access broken clock. Lastly, if the Hero does
@@ -801,40 +835,13 @@ public class Hero extends Creature {
 	 * @return an Item object of the clock Item (or null)
 	 */
 	@Nullable
-	private Item getBestClock() {
-		Item clock = null;
-		if (hasWeapon() && getWeapon().hasTag(Item.Tag.CLOCK)) {
-			if (!getWeapon().isBroken()) {
-				clock = getWeapon();
-			} else { // The Hero is equipping a broken clock: check if he has a working one in his
-						// inventory.
-				for (Item item : getInventory().getItems()) {
-					if (item.hasTag(Item.Tag.CLOCK) && !item.isBroken()) {
-						clock = item;
-						break;
-					}
-				}
-				if (clock == null) {
-					clock = getWeapon(); // The Hero does not have a working clock in his inventory: use the equipped
-											// one.
-				}
-			}
-		} else { // The Hero is not equipping a clock.
-			Item brokenClock = null;
-			for (Item item : getInventory().getItems()) {
-				if (item.hasTag(Item.Tag.CLOCK)) {
-					if (item.isBroken() && brokenClock == null) {
-						brokenClock = item;
-					} else {
-						clock = item;
-						break;
-					}
-				}
-			}
-			if (brokenClock != null) {
-				clock = brokenClock;
-			}
+	public Item getBestClock() {
+		Item clock = getEquippedClock();
+
+		if (clock == null) {
+			clock = getClockFromInventory();
 		}
+
 		if (clock != null) {
 			Engine.rollDateAndRefresh(getTimeToReadFromClock(clock));
 		}
