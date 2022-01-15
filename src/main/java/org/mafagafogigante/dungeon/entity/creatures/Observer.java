@@ -26,10 +26,7 @@ import org.mafagafogigante.dungeon.io.Writer;
 import org.mafagafogigante.dungeon.stats.ExplorationStatistics;
 import org.mafagafogigante.dungeon.util.Percentage;
 import org.mafagafogigante.dungeon.util.Utils;
-import org.mafagafogigante.dungeon.world.LuminosityVisibilityCriterion;
-import org.mafagafogigante.dungeon.world.VisibilityCriteria;
-import org.mafagafogigante.dungeon.world.WeatherCondition;
-import org.mafagafogigante.dungeon.world.WeatherConditionVisibilityCriterion;
+import org.mafagafogigante.dungeon.world.*;
 
 /**
  * An observer is used to observe from a Creature's viewpoint.
@@ -37,14 +34,14 @@ import org.mafagafogigante.dungeon.world.WeatherConditionVisibilityCriterion;
 public class Observer implements Serializable {
 
   private static final long serialVersionUID = Version.MAJOR;
-  private static final VisibilityCriteria ADJACENT_LOCATIONS_VISIBILITY;
+  private static final IVisibilityCriteria ADJACENT_LOCATIONS_VISIBILITY;
 
   static {
     LuminosityVisibilityCriterion luminosity = new LuminosityVisibilityCriterion(new Luminosity(new Percentage(0.4)));
     WeatherCondition minimum = WeatherCondition.CLEAR;
     WeatherCondition maximum = WeatherCondition.RAIN;
     WeatherConditionVisibilityCriterion weather = new WeatherConditionVisibilityCriterion(minimum, maximum);
-    ADJACENT_LOCATIONS_VISIBILITY = new VisibilityCriteria(luminosity, weather);
+    ADJACENT_LOCATIONS_VISIBILITY = new VisibilityCriteriaFactory().createNewVisbilityCriteriaFromMultipleCriterion(luminosity, weather);
   }
 
   private final Creature creature;

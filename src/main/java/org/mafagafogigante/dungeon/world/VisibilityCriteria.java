@@ -10,18 +10,19 @@ import java.util.List;
 /**
  * A collection of visibility criterion.
  */
-public class VisibilityCriteria implements Serializable {
+class VisibilityCriteria implements IVisibilityCriteria {
 
   private static final long serialVersionUID = Version.MAJOR;
   private final List<VisibilityCriterion> visibilityCriteria;
 
-  public VisibilityCriteria(VisibilityCriterion... visibilityCriteria) {
+  protected VisibilityCriteria(VisibilityCriterion... visibilityCriteria) {
     this.visibilityCriteria = Arrays.asList(visibilityCriteria);
   }
 
   /**
    * Evaluates whether or not these visibility criteria is met by an observer.
    */
+  @Override
   public boolean isMetBy(Observer observer) {
     for (VisibilityCriterion criterion : visibilityCriteria) {
       if (!criterion.isMetBy(observer)) {

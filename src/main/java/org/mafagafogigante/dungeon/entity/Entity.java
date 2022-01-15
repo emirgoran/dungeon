@@ -6,7 +6,8 @@ import org.mafagafogigante.dungeon.io.Version;
 import org.mafagafogigante.dungeon.util.Percentage;
 import org.mafagafogigante.dungeon.util.Selectable;
 import org.mafagafogigante.dungeon.world.LuminosityVisibilityCriterion;
-import org.mafagafogigante.dungeon.world.VisibilityCriteria;
+import org.mafagafogigante.dungeon.world.IVisibilityCriteria;
+import org.mafagafogigante.dungeon.world.VisibilityCriteriaFactory;
 
 import java.io.Serializable;
 
@@ -21,7 +22,7 @@ public abstract class Entity implements Selectable, Serializable {
   private final String type;
   private final Name name;
   private final Weight weight;
-  private final VisibilityCriteria visibilityCriteria;
+  private final IVisibilityCriteria visibilityCriteria;
 
   protected Entity(Preset preset) {
     this.id = preset.getId();
@@ -29,7 +30,7 @@ public abstract class Entity implements Selectable, Serializable {
     this.name = preset.getName();
     this.weight = preset.getWeight();
     Luminosity minimumLuminosity = new Luminosity(new Percentage(1 - preset.getVisibility().toDouble()));
-    this.visibilityCriteria = new VisibilityCriteria(new LuminosityVisibilityCriterion(minimumLuminosity));
+    this.visibilityCriteria = new VisibilityCriteriaFactory().createNewLuminosityVisibilityCriteria(minimumLuminosity);
   }
 
   public Id getId() {
@@ -49,7 +50,7 @@ public abstract class Entity implements Selectable, Serializable {
     return weight;
   }
 
-  public VisibilityCriteria getVisibilityCriteria() {
+  public IVisibilityCriteria getVisibilityCriteria() {
     return visibilityCriteria;
   }
 

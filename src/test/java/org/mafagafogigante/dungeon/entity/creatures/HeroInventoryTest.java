@@ -30,7 +30,8 @@ import org.mafagafogigante.dungeon.stats.HeroStatistics;
 import org.mafagafogigante.dungeon.stats.Statistics;
 import org.mafagafogigante.dungeon.util.Percentage;
 import org.mafagafogigante.dungeon.world.LuminosityVisibilityCriterion;
-import org.mafagafogigante.dungeon.world.VisibilityCriteria;
+import org.mafagafogigante.dungeon.world.IVisibilityCriteria;
+import org.mafagafogigante.dungeon.world.VisibilityCriteriaFactory;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
@@ -60,7 +61,7 @@ public class HeroInventoryTest {
 		when(location.getItemList()).thenReturn(locInventory.getItems());
 		when(location.getLuminosity()).thenReturn(new Luminosity(new Percentage(100.0)));
 		when(item.getVisibilityCriteria()).thenReturn(
-				new VisibilityCriteria(new LuminosityVisibilityCriterion(new Luminosity(new Percentage(80.0)))));
+				new VisibilityCriteriaFactory().createNewLuminosityVisibilityCriteria(new Luminosity(new Percentage(80.0))));
 		when(item.getQualifiedName()).thenReturn("TestItem");
 		when(item.getName()).thenReturn(NameFactory.newInstance("TestItem"));
 		when(item.getWeight()).thenReturn(Weight.newInstance(0.5));
@@ -71,7 +72,7 @@ public class HeroInventoryTest {
 
 		location.getInventory().addItem(item2);
 		when(item2.getVisibilityCriteria()).thenReturn(
-				new VisibilityCriteria(new LuminosityVisibilityCriterion(new Luminosity(new Percentage(80.0)))));
+				new VisibilityCriteriaFactory().createNewLuminosityVisibilityCriteria(new Luminosity(new Percentage(80.0))));
 		when(item2.getQualifiedName()).thenReturn("TestItem2");
 		when(item2.getName()).thenReturn(NameFactory.newInstance("TestItem2"));
 		when(item2.getWeight()).thenReturn(Weight.newInstance(0.2));
@@ -86,7 +87,7 @@ public class HeroInventoryTest {
 		when(location.getItemList()).thenReturn(locInventory.getItems());
 		when(location.getLuminosity()).thenReturn(new Luminosity(new Percentage(100.0)));
 		when(item.getVisibilityCriteria()).thenReturn(
-				new VisibilityCriteria(new LuminosityVisibilityCriterion(new Luminosity(new Percentage(80.0)))));
+				new VisibilityCriteriaFactory().createNewLuminosityVisibilityCriteria(new Luminosity(new Percentage(80.0))));
 		when(item.getQualifiedName()).thenReturn("TestItem");
 		when(item.getName()).thenReturn(NameFactory.newInstance("TestItem"));
 		when(item.getWeight()).thenReturn(Weight.newInstance(2));
