@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -22,6 +23,7 @@ import org.mafagafogigante.dungeon.entity.items.ItemIntegrity;
 import org.mafagafogigante.dungeon.entity.items.LocationInventory;
 import org.mafagafogigante.dungeon.entity.items.WeaponComponent;
 import org.mafagafogigante.dungeon.game.Engine;
+import org.mafagafogigante.dungeon.game.Game;
 import org.mafagafogigante.dungeon.game.Id;
 import org.mafagafogigante.dungeon.game.Location;
 import org.mafagafogigante.dungeon.game.NameFactory;
@@ -38,6 +40,7 @@ public class HeroInventoryTest {
 
 	public static final int MAX_HERO_HEALTH = 100;
 	private static MockedStatic<Engine> engine;
+	private static MockedStatic<Game> game;
 
 	private Hero hero;
 	private Item item;
@@ -154,6 +157,7 @@ public class HeroInventoryTest {
 	@BeforeClass
 	public static void prepareMocks() {
 		engine = Mockito.mockStatic(Engine.class);
+		game = Mockito.mockStatic(Game.class);
 	}
 
 	@Before
@@ -182,5 +186,11 @@ public class HeroInventoryTest {
 		when(world.getWorldDate()).thenReturn(new Date(2055, 6, 2, 6, 10, 0));
 		when(location.getWorld()).thenReturn(world);
 		item = mock(Item.class);
+	}
+
+	@AfterClass
+	public static void cleanup() {
+		engine.close();
+		game.close();
 	}
 }

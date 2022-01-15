@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The abstract BaseInventory class all inventories inherit from.
@@ -33,6 +34,10 @@ public abstract class BaseInventory implements Serializable {
     return Collections.unmodifiableList(items);
   }
 
+  public List<Item> getItems(Tag tag){
+	 return items.stream().filter(item -> item.hasTag(tag)).collect(Collectors.toList());
+  }
+  
   /**
    * Convenience method that returns the number of items in the inventory.
    *
