@@ -800,7 +800,7 @@ public class Hero extends Creature {
 		Item clock = null;
 		if (hasWeapon() && getWeapon().hasTag(Item.Tag.CLOCK)) {
 			if (!getWeapon().isBroken()) {
-				Engine.rollDateAndRefresh(getTimeToReadFromClock(clock));
+				Engine.rollDateAndRefresh(getTimeToReadFromClock(getWeapon()));
 				return getWeapon();
 			}
 			
