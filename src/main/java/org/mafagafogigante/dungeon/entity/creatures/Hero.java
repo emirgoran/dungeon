@@ -788,45 +788,6 @@ public class Hero extends Creature {
 		walker.parseHeroWalk(arguments);
 	}
 
-	private Item getEquippedClock() {
-		Item clock = null;
-		if (!(hasWeapon() && getWeapon().hasTag(Item.Tag.CLOCK)))
-			return null;
-
-		if (!getWeapon().isBroken()) {
-			return getWeapon();
-		}
-
-		for (Item item : getInventory().getItems(Item.Tag.CLOCK)) {
-			if (!item.isBroken()) {
-				clock = item;
-				break;
-			}
-		}
-		if (clock == null) {
-			clock = getWeapon(); // The Hero does not have a working clock in his inventory: use the equipped
-									// one.
-		}
-		return clock;
-	}
-
-	public Item getClockFromInventory() {
-		Item clock = null;
-		Item brokenClock = null;
-		for (Item item : getInventory().getItems(Item.Tag.CLOCK)) {
-			if (item.isBroken() && brokenClock == null) {
-				brokenClock = item;
-			} else {
-				clock = item;
-				break;
-			}
-		}
-		if (brokenClock != null) {
-			clock = brokenClock;
-		}
-		return clock;
-	}
-
 	/**
 	 * Gets the easiest-to-access unbroken clock of the Hero. If the Hero has no
 	 * unbroken clock, the easiest-to-access broken clock. Lastly, if the Hero does
@@ -836,10 +797,36 @@ public class Hero extends Creature {
 	 */
 	@Nullable
 	public Item getBestClock() {
-		Item clock = getEquippedClock();
+		Item clock = null;
+		if (hasWeapon() && getWeapon().hasTag(Item.Tag.CLOCK)) {
+			if (!getWeapon().isBroken()) {
+				Engine.rollDateAndRefresh(getTimeToReadFromClock(getWeapon()));
+				return getWeapon();
+			}
+			
+			for (Item item : getInventory().getItems(Item.Tag.CLOCK)) {
+				if (!item.isBroken()) {
+					clock = item;
+					break;
+				}
+			}
+			if (clock == null) {
+				clock = getWeapon(); // The Hero does not have a working clock in his inventory: use the equipped one.
+			}
 
-		if (clock == null) {
-			clock = getClockFromInventory();
+		} else { // The Hero is not equipping a clock.
+			Item brokenClock = null;
+			for (Item item : getInventory().getItems(Item.Tag.CLOCK)) {
+				if (item.isBroken() && brokenClock == null) {
+					brokenClock = item;
+				} else {
+					clock = item;
+					break;
+				}
+			}
+			if (brokenClock != null) {
+				clock = brokenClock;
+			}
 		}
 
 		if (clock != null) {

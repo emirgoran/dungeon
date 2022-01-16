@@ -22,7 +22,7 @@ public final class BaseName extends Name implements Serializable {
    * @param singular the singular form, not null
    * @param plural the plural form, not null
    */
-  BaseName(@NotNull String singular, @NotNull String plural) {
+  public BaseName(@NotNull String singular, @NotNull String plural) {
     this.singular = singular;
     this.plural = plural;
   }

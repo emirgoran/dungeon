@@ -16,7 +16,7 @@ public abstract class Spell implements Selectable, Serializable {
   private static final long serialVersionUID = Version.MAJOR;
   private final SpellDefinition definition;
 
-  Spell(String id, String name) {
+  public Spell(String id, String name) {
     this.definition = new SpellDefinition(id, name);
   }
 
