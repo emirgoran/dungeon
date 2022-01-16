@@ -24,7 +24,7 @@ public abstract class Entity implements Selectable, Serializable {
   private final Weight weight;
   private final IVisibilityCriteria visibilityCriteria;
 
-  protected Entity(Preset preset) {
+  protected Entity(AbstractPreset preset) {
     this.id = preset.getId();
     this.type = preset.getType();
     this.name = preset.getName();
